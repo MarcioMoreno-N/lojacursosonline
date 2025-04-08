@@ -9,7 +9,9 @@ use App\Http\Controllers\CarrinhoController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminProdutoController;
-use App\Http\Controllers\AdminCategoriaController; // ✅ Novo Controller de Categorias
+use App\Http\Controllers\AdminCategoriaController;
+use App\Http\Controllers\FotoProdutoController; // ✅ Controller de fotos
+use App\Http\Controllers\AdminFotoProdutoController;
 
 // ✅ Home redirecionando para listagem de cursos
 Route::get('/', function () {
@@ -48,7 +50,7 @@ Route::get('/admin/painel', [AdminController::class, 'painel'])->name('admin.pai
 Route::get('/admin/pedidos', [AdminController::class, 'pedidos'])->name('admin.pedidos');
 Route::post('/admin/pedido/{id}/status/{status}', [AdminController::class, 'alterarStatus'])->name('admin.pedidos.status');
 
-// ✅ Admin - Gerenciamento de Produtos e Categorias
+// ✅ Admin - Gerenciamento de Produtos, Fotos e Categorias
 Route::prefix('admin')->group(function () {
     // Produtos
     Route::get('/produtos', [AdminProdutoController::class, 'index'])->name('admin.produtos.index');
@@ -57,6 +59,12 @@ Route::prefix('admin')->group(function () {
     Route::delete('/produtos/{id}', [AdminProdutoController::class, 'destroy'])->name('admin.produtos.destroy');
     Route::get('/produtos/{id}/editar', [AdminProdutoController::class, 'edit'])->name('admin.produtos.edit');
     Route::put('/produtos/{id}', [AdminProdutoController::class, 'update'])->name('admin.produtos.update');
+
+    // Fotos dos Produtos ✅
+    Route::get('/produtos/{id}/fotos', [FotoProdutoController::class, 'index'])->name('admin.produtos.fotos.index');
+    Route::post('/produtos/{id}/fotos', [FotoProdutoController::class, 'store'])->name('admin.produtos.fotos.store');
+    Route::delete('/fotos/{id}', [FotoProdutoController::class, 'destroy'])->name('admin.produtos.fotos.destroy');
+    Route::get('/produtos/{produto}/fotos', [AdminFotoProdutoController::class, 'index'])->name('admin.fotos.index');
 
     // Categorias ✅
     Route::get('/categorias', [AdminCategoriaController::class, 'index'])->name('admin.categorias.index');

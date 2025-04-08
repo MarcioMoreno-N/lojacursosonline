@@ -9,10 +9,12 @@ use Illuminate\Support\Facades\Session;
 class ProdutoController extends Controller
 {
     public function index()
-    {
-        $produtos = Produto::with('categoria')->orderBy('nome')->get();
-        return view('produtos.index', compact('produtos'));
-    }
+{
+    // Carrega categoria e fotos relacionadas
+    $produtos = Produto::with(['categoria', 'fotos'])->orderBy('nome')->get();
+    return view('produtos.index', compact('produtos'));
+}
+
 
     public function adicionarAoCarrinho($id)
     {

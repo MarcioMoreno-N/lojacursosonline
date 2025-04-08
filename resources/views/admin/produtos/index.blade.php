@@ -36,15 +36,16 @@
                         <td>R$ {{ number_format($produto->valor, 2, ',', '.') }}</td>
                         <td>{{ $produto->quantidade }}</td>
                         <td>
-    <a href="{{ route('admin.produtos.edit', $produto->id) }}" class="btn btn-sm btn-warning me-1">Editar</a>
+                            <a href="{{ route('admin.produtos.edit', $produto->id) }}" class="btn btn-sm btn-warning me-1">✏️ Editar</a>
 
-    <form action="{{ route('admin.produtos.destroy', $produto->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir este curso?')">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
-    </form>
-</td>
+                            <a href="{{ route('admin.fotos.index', $produto->id) }}" class="btn btn-sm btn-info me-1">🖼 Fotos</a>
 
+                            <form action="{{ route('admin.produtos.destroy', $produto->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir este curso?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger">🗑 Excluir</button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
