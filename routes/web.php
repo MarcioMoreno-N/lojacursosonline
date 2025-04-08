@@ -9,6 +9,7 @@ use App\Http\Controllers\CarrinhoController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminProdutoController;
+use App\Http\Controllers\AdminCategoriaController; // ✅ Novo Controller de Categorias
 
 // ✅ Home redirecionando para listagem de cursos
 Route::get('/', function () {
@@ -47,12 +48,21 @@ Route::get('/admin/painel', [AdminController::class, 'painel'])->name('admin.pai
 Route::get('/admin/pedidos', [AdminController::class, 'pedidos'])->name('admin.pedidos');
 Route::post('/admin/pedido/{id}/status/{status}', [AdminController::class, 'alterarStatus'])->name('admin.pedidos.status');
 
-// ✅ Admin - Gerenciamento de Produtos
+// ✅ Admin - Gerenciamento de Produtos e Categorias
 Route::prefix('admin')->group(function () {
+    // Produtos
     Route::get('/produtos', [AdminProdutoController::class, 'index'])->name('admin.produtos.index');
     Route::get('/produtos/novo', [AdminProdutoController::class, 'create'])->name('admin.produtos.create');
     Route::post('/produtos', [AdminProdutoController::class, 'store'])->name('admin.produtos.store');
     Route::delete('/produtos/{id}', [AdminProdutoController::class, 'destroy'])->name('admin.produtos.destroy');
     Route::get('/produtos/{id}/editar', [AdminProdutoController::class, 'edit'])->name('admin.produtos.edit');
     Route::put('/produtos/{id}', [AdminProdutoController::class, 'update'])->name('admin.produtos.update');
+
+    // Categorias ✅
+    Route::get('/categorias', [AdminCategoriaController::class, 'index'])->name('admin.categorias.index');
+    Route::get('/categorias/novo', [AdminCategoriaController::class, 'create'])->name('admin.categorias.create');
+    Route::post('/categorias', [AdminCategoriaController::class, 'store'])->name('admin.categorias.store');
+    Route::get('/categorias/{id}/editar', [AdminCategoriaController::class, 'edit'])->name('admin.categorias.edit');
+    Route::put('/categorias/{id}', [AdminCategoriaController::class, 'update'])->name('admin.categorias.update');
+    Route::delete('/categorias/{id}', [AdminCategoriaController::class, 'destroy'])->name('admin.categorias.destroy');
 });

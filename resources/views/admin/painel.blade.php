@@ -10,6 +10,7 @@
         <div class="d-flex justify-content-center gap-3 mt-4">
             <a href="{{ route('admin.pedidos') }}" class="btn btn-outline-primary">📦 Ver Pedidos</a>
             <a href="{{ route('admin.produtos.index') }}" class="btn btn-outline-success">🎓 Gerenciar Cursos</a>
+            <a href="{{ route('admin.categorias.index') }}" class="btn btn-outline-warning">🗂️ Categorias</a>
         </div>
     </div>
 @endsection
