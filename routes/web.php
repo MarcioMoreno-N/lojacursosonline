@@ -7,20 +7,24 @@ use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\CarrinhoController;
 use App\Http\Controllers\PedidoController;
-use App\Http\Controllers\AdminPedidoController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminProdutoController;
 
+// ✅ Home redirecionando para listagem de cursos
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('produtos.index');
 });
 
+// ✅ Clientes
 Route::get('/clientes/cadastrar', [ClienteController::class, 'create'])->name('clientes.create');
 Route::post('/clientes', [ClienteController::class, 'store'])->name('clientes.store');
 
+// ✅ Autenticação
 Route::get('/cliente/login', [AuthClienteController::class, 'showLoginForm'])->name('cliente.login');
 Route::post('/cliente/login', [AuthClienteController::class, 'login'])->name('cliente.login.submit');
 Route::post('/cliente/logout', [AuthClienteController::class, 'logout'])->name('cliente.logout');
 
+// ✅ Endereços
 Route::get('/enderecos', [EnderecoController::class, 'index'])->name('enderecos.index');
 Route::get('/enderecos/novo', [EnderecoController::class, 'create'])->name('enderecos.create');
 Route::post('/enderecos', [EnderecoController::class, 'store'])->name('enderecos.store');
@@ -38,9 +42,17 @@ Route::post('/carrinho/finalizar', [CarrinhoController::class, 'finalizarCompra'
 // ✅ Pedidos do cliente
 Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos.index');
 
-// ✅ Admin Routes
+// ✅ Admin - Painel e Pedidos
 Route::get('/admin/painel', [AdminController::class, 'painel'])->name('admin.painel');
 Route::get('/admin/pedidos', [AdminController::class, 'pedidos'])->name('admin.pedidos');
-
-// Alterar status do pedido no painel admin
 Route::post('/admin/pedido/{id}/status/{status}', [AdminController::class, 'alterarStatus'])->name('admin.pedidos.status');
+
+// ✅ Admin - Gerenciamento de Produtos
+Route::prefix('admin')->group(function () {
+    Route::get('/produtos', [AdminProdutoController::class, 'index'])->name('admin.produtos.index');
+    Route::get('/produtos/novo', [AdminProdutoController::class, 'create'])->name('admin.produtos.create');
+    Route::post('/produtos', [AdminProdutoController::class, 'store'])->name('admin.produtos.store');
+    Route::delete('/produtos/{id}', [AdminProdutoController::class, 'destroy'])->name('admin.produtos.destroy');
+    Route::get('/produtos/{id}/editar', [AdminProdutoController::class, 'edit'])->name('admin.produtos.edit');
+    Route::put('/produtos/{id}', [AdminProdutoController::class, 'update'])->name('admin.produtos.update');
+});
