@@ -19,6 +19,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Nome</th>
+                    <th>Categoria Pai</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -27,6 +28,7 @@
                     <tr>
                         <td>{{ $categoria->id }}</td>
                         <td>{{ $categoria->nome }}</td>
+                        <td>{{ $categoria->categoriaPai?->nome ?? '—' }}</td>
                         <td>
                             <a href="{{ route('admin.categorias.edit', $categoria->id) }}" class="btn btn-sm btn-warning">✏️ Editar</a>
                             <form action="{{ route('admin.categorias.destroy', $categoria->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Deseja excluir esta categoria?')">
