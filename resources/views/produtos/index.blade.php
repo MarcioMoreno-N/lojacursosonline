@@ -67,6 +67,8 @@
                                 </button>
                             @endif
                         </div>
+                    @else
+                        <img src="{{ asset('images/sem-imagem.png') }}" alt="Curso sem imagem" class="card-img-top" style="height: 200px; object-fit: cover;">
                     @endif
 
                     <div class="card-body d-flex flex-column">

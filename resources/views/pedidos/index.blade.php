@@ -18,6 +18,16 @@
                 </div>
                 <div class="card-body">
                     <p><strong>Data:</strong> {{ $pedido->created_at->format('d/m/Y H:i') }}</p>
+                    
+                    @if($pedido->endereco)
+                        <p><strong>Endereço de Entrega:</strong><br>
+                            {{ $pedido->endereco->descricao }} - 
+                            {{ $pedido->endereco->logradouro }}, {{ $pedido->endereco->numero }} - 
+                            {{ $pedido->endereco->bairro }} - 
+                            {{ $pedido->endereco->cidade->nome }}/{{ $pedido->endereco->cidade->estado }}
+                        </p>
+                    @endif
+
                     <p><strong>Total:</strong> R$ {{ number_format($pedido->valor_total, 2, ',', '.') }}</p>
 
                     <table class="table table-sm table-striped mt-3">

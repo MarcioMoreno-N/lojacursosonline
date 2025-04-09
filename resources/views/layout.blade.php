@@ -18,13 +18,13 @@
 
                 @if(session('cliente_id'))
                     <li class="nav-item"><a href="{{ route('pedidos.index') }}" class="nav-link">🧾 Meus Pedidos</a></li>
+                    <li class="nav-item"><a href="{{ route('enderecos.index') }}" class="nav-link">🏠 Meus Endereços</a></li>
 
                     @if(session('cliente_admin') == 1)
-    <li class="nav-item">
-        <a href="{{ route('admin.painel') }}" class="nav-link">⚙️ Painel Administrativo</a>
-    </li>
-@endif
-
+                        <li class="nav-item">
+                            <a href="{{ route('admin.painel') }}" class="nav-link">⚙️ Painel Administrativo</a>
+                        </li>
+                    @endif
 
                     <li class="nav-item">
                         <span class="nav-link">Bem-vindo, {{ session('cliente_nome') }}</span>
@@ -52,12 +52,6 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-{{-- DEBUG: Mostrar sessão --}}
-<div class="container mt-4">
-    <pre class="bg-light p-3 border rounded">
-        {{ print_r(session()->all(), true) }}
-    </pre>
-</div>
 
 </body>
 </html>

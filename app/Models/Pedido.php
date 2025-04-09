@@ -11,6 +11,7 @@ class Pedido extends Model
 
     protected $fillable = [
         'cliente_id',
+        'endereco_id', // ✅ incluído
         'valor_total', 
         'status'
     ];
@@ -18,6 +19,11 @@ class Pedido extends Model
     public function cliente()
     {
         return $this->belongsTo(Cliente::class);
+    }
+
+    public function endereco() // ✅ relacionamento
+    {
+        return $this->belongsTo(Endereco::class);
     }
 
     public function itens()

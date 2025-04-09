@@ -44,6 +44,19 @@
         <div class="text-center mt-4">
             <form action="{{ route('carrinho.finalizar') }}" method="POST" class="d-inline">
                 @csrf
+
+                <div class="mb-3">
+                    <label for="endereco_id" class="form-label">Selecione um endereço para entrega:</label>
+                    <select name="endereco_id" id="endereco_id" class="form-select" required>
+                        <option value="" disabled selected>Escolha um endereço</option>
+                        @foreach ($enderecos as $endereco)
+                            <option value="{{ $endereco->id }}">
+                                {{ $endereco->descricao }} - {{ $endereco->logradouro }}, {{ $endereco->numero }}, {{ $endereco->bairro }} ({{ $endereco->cidade->nome }}/{{ $endereco->cidade->estado }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <button type="submit" class="btn btn-success me-2">Finalizar Compra</button>
             </form>
 

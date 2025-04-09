@@ -11,10 +11,11 @@
                 <th>ID</th>
                 <th>Cliente</th>
                 <th>Data</th>
+                <th>Endereço</th>
                 <th>Status</th>
                 <th>Total</th>
                 <th>Cursos</th>
-                <th>Ações</th> <!-- Coluna de ações para alterar o status -->
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -23,20 +24,31 @@
                     <td>{{ $pedido->id }}</td>
                     <td>{{ $pedido->cliente->nome }}</td>
                     <td>{{ $pedido->created_at->format('d/m/Y H:i') }}</td>
+                    <td class="text-start">
+                        @if($pedido->endereco)
+                            <small>
+                                {{ $pedido->endereco->descricao }}<br>
+                                {{ $pedido->endereco->logradouro }}, {{ $pedido->endereco->numero }}<br>
+                                {{ $pedido->endereco->bairro }}<br>
+                                {{ $pedido->endereco->cidade->nome }}/{{ $pedido->endereco->cidade->estado }}
+                            </small>
+                        @else
+                            <span class="text-muted">Endereço não informado</span>
+                        @endif
+                    </td>
                     <td>{{ ucfirst($pedido->status) }}</td>
-                    <td>R$ {{ number_format($pedido->total, 2, ',', '.') }}</td>
+                    <td>R$ {{ number_format($pedido->valor_total, 2, ',', '.') }}</td>
                     <td>
                         @foreach ($pedido->itens as $item)
                             {{ $item->produto->nome }} (x{{ $item->quantidade }})<br>
                         @endforeach
                     </td>
                     <td>
-                        <!-- Formulário para alterar o status do pedido -->
                         <form action="{{ route('admin.pedidos.status', ['id' => $pedido->id, 'status' => 'finalizado']) }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-success btn-sm">Finalizar</button>
                         </form>
-                        
+
                         <form action="{{ route('admin.pedidos.status', ['id' => $pedido->id, 'status' => 'cancelado']) }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-danger btn-sm">Cancelar</button>
@@ -44,7 +56,7 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="7">Nenhum pedido encontrado.</td></tr>
+                <tr><td colspan="8">Nenhum pedido encontrado.</td></tr>
             @endforelse
         </tbody>
     </table>

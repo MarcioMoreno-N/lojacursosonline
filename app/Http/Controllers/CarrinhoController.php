@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Session;
 use App\Models\Pedido;
 use App\Models\PedidoItem;
 use App\Models\Produto;
+use App\Models\Endereco;
 
 class CarrinhoController extends Controller
 {
@@ -15,7 +16,14 @@ class CarrinhoController extends Controller
         $carrinho = Session::get('carrinho', []);
         $total = array_sum(array_column($carrinho, 'subtotal'));
 
-        return view('carrinho.index', compact('carrinho', 'total'));
+        $clienteId = Session::get('cliente_id');
+
+        // Busca os endereços do cliente
+        $enderecos = Endereco::with('cidade')
+            ->where('cliente_id', $clienteId)
+            ->get();
+
+        return view('carrinho.index', compact('carrinho', 'total', 'enderecos'));
     }
 
     public function remover($id)
@@ -52,12 +60,18 @@ class CarrinhoController extends Controller
             return redirect()->route('carrinho.index')->with('error', 'Seu carrinho está vazio.');
         }
 
+        // Valida o endereço selecionado
+        $request->validate([
+            'endereco_id' => 'required|exists:enderecos,id'
+        ]);
+
         // Calcula o valor total do pedido
         $valorTotal = array_sum(array_column($carrinho, 'subtotal'));
 
         // Cria o pedido
         $pedido = Pedido::create([
             'cliente_id' => $clienteId,
+            'endereco_id' => $request->endereco_id,
             'valor_total' => $valorTotal,
             'status' => 'pendente',
         ]);
