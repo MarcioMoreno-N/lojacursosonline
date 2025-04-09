@@ -3,14 +3,14 @@
 @section('title', 'Todos os Pedidos')
 
 @section('content')
-    <h1 class="text-center mb-4">📦 Todos os Pedidos</h1>
+    <h1 class="text-center mb-4 text-light">📦 Todos os Pedidos</h1>
 
     @if($pedidos->isEmpty())
-        <p class="text-center">Nenhum pedido foi realizado ainda.</p>
+        <p class="text-center text-light">Nenhum pedido foi realizado ainda.</p>
     @else
         <div class="table-responsive">
-            <table class="table table-bordered text-center align-middle">
-                <thead class="table-primary">
+            <table class="table table-dark table-striped table-bordered text-center align-middle">
+                <thead class="table-light">
                     <tr>
                         <th>ID</th>
                         <th>Cliente</th>
@@ -26,12 +26,14 @@
                             <td>{{ $pedido->id }}</td>
                             <td>{{ $pedido->cliente->nome }}</td>
                             <td>{{ $pedido->created_at->format('d/m/Y H:i') }}</td>
-                            <td>{{ ucfirst($pedido->status) }}</td>
-                            <td>R$ {{ number_format($pedido->total, 2, ',', '.') }}</td>
                             <td>
-                                <ul class="list-unstyled mb-0">
+                                <span class="badge bg-secondary text-light">{{ ucfirst($pedido->status) }}</span>
+                            </td>
+                            <td class="text-info">R$ {{ number_format($pedido->total, 2, ',', '.') }}</td>
+                            <td class="text-start">
+                                <ul class="mb-0 ps-3">
                                     @foreach($pedido->itens as $item)
-                                        <li>{{ $item->produto->nome }} (x{{ $item->quantidade }})</li>
+                                        <li class="text-light">{{ $item->produto->nome }} (x{{ $item->quantidade }})</li>
                                     @endforeach
                                 </ul>
                             </td>

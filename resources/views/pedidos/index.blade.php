@@ -3,7 +3,7 @@
 @section('title', 'Meus Pedidos')
 
 @section('content')
-    <h1 class="text-center mb-4">Meus Pedidos</h1>
+    <h1 class="text-center mb-4 text-light">📦 Meus Pedidos</h1>
 
     @if(session('success'))
         <div class="alert alert-success text-center">{{ session('success') }}</div>
@@ -11,16 +11,16 @@
 
     @if($pedidos->count())
         @foreach($pedidos as $pedido)
-            <div class="card mb-4 shadow-sm">
+            <div class="card mb-4 shadow bg-dark text-light border-secondary">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <strong>Pedido #{{ $pedido->id }}</strong>
                     <span>Status: <strong>{{ ucfirst($pedido->status) }}</strong></span>
                 </div>
                 <div class="card-body">
-                    <p><strong>Data:</strong> {{ $pedido->created_at->format('d/m/Y H:i') }}</p>
-                    
+                    <p><strong>📅 Data:</strong> {{ $pedido->created_at->format('d/m/Y H:i') }}</p>
+
                     @if($pedido->endereco)
-                        <p><strong>Endereço de Entrega:</strong><br>
+                        <p><strong>🏠 Endereço de Entrega:</strong><br>
                             {{ $pedido->endereco->descricao }} - 
                             {{ $pedido->endereco->logradouro }}, {{ $pedido->endereco->numero }} - 
                             {{ $pedido->endereco->bairro }} - 
@@ -28,10 +28,10 @@
                         </p>
                     @endif
 
-                    <p><strong>Total:</strong> R$ {{ number_format($pedido->valor_total, 2, ',', '.') }}</p>
+                    <p><strong>💰 Total:</strong> R$ {{ number_format($pedido->valor_total, 2, ',', '.') }}</p>
 
-                    <table class="table table-sm table-striped mt-3">
-                        <thead>
+                    <table class="table table-dark table-striped table-bordered mt-3">
+                        <thead class="table-secondary text-dark">
                             <tr>
                                 <th>Curso</th>
                                 <th>Valor unitário</th>
@@ -54,9 +54,9 @@
             </div>
         @endforeach
     @else
-        <p class="text-center">Você ainda não fez nenhum pedido.</p>
+        <p class="text-center text-light">Você ainda não fez nenhum pedido.</p>
         <div class="text-center mt-4">
-            <a href="{{ route('produtos.index') }}" class="btn btn-primary">Ver Cursos</a>
+            <a href="{{ route('produtos.index') }}" class="btn btn-outline-light">Ver Cursos</a>
         </div>
     @endif
 @endsection

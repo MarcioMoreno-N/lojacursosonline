@@ -3,7 +3,7 @@
 @section('title', 'Meus Endereços')
 
 @section('content')
-    <h1 class="text-center mb-4">Meus Endereços</h1>
+    <h1 class="text-center mb-4 text-light">🏠 Meus Endereços</h1>
 
     @if(session('success'))
         <div class="alert alert-success text-center">
@@ -15,10 +15,10 @@
         <div class="row">
             @foreach($enderecos as $endereco)
                 <div class="col-md-6 mb-4">
-                    <div class="card shadow-sm">
+                    <div class="card shadow-sm bg-dark text-light border-0">
                         <div class="card-body">
                             <h5 class="card-title">{{ $endereco->descricao }}</h5>
-                            <p class="card-text">
+                            <p class="card-text text-light">
                                 {{ $endereco->logradouro }}, {{ $endereco->numero }}<br>
                                 {{ $endereco->bairro }} - {{ $endereco->cidade->nome }}/{{ $endereco->cidade->estado }}
                             </p>
@@ -28,10 +28,10 @@
             @endforeach
         </div>
     @else
-        <p class="text-center">Você ainda não cadastrou nenhum endereço.</p>
+        <p class="text-center text-light">Você ainda não cadastrou nenhum endereço.</p>
     @endif
 
     <div class="text-center mt-4">
-        <a href="{{ route('enderecos.create') }}" class="btn btn-primary">Novo Endereço</a>
+        <a href="{{ route('enderecos.create') }}" class="btn btn-outline-primary">➕ Novo Endereço</a>
     </div>
 @endsection
