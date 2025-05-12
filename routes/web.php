@@ -10,8 +10,9 @@ use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminProdutoController;
 use App\Http\Controllers\AdminCategoriaController;
-use App\Http\Controllers\FotoProdutoController; // ✅ Controller de fotos
+use App\Http\Controllers\FotoProdutoController;
 use App\Http\Controllers\AdminFotoProdutoController;
+use App\Http\Controllers\ConfiguracaoApiController;
 
 // ✅ Home redirecionando para listagem de cursos
 Route::get('/', function () {
@@ -50,7 +51,7 @@ Route::get('/admin/painel', [AdminController::class, 'painel'])->name('admin.pai
 Route::get('/admin/pedidos', [AdminController::class, 'pedidos'])->name('admin.pedidos');
 Route::post('/admin/pedido/{id}/status/{status}', [AdminController::class, 'alterarStatus'])->name('admin.pedidos.status');
 
-// ✅ Admin - Gerenciamento de Produtos, Fotos e Categorias
+// ✅ Admin - Gerenciamento de Produtos, Fotos, Categorias e Configurações de API
 Route::prefix('admin')->group(function () {
     // Produtos
     Route::get('/produtos', [AdminProdutoController::class, 'index'])->name('admin.produtos.index');
@@ -60,17 +61,24 @@ Route::prefix('admin')->group(function () {
     Route::get('/produtos/{id}/editar', [AdminProdutoController::class, 'edit'])->name('admin.produtos.edit');
     Route::put('/produtos/{id}', [AdminProdutoController::class, 'update'])->name('admin.produtos.update');
 
-    // Fotos dos Produtos ✅
+    // Fotos dos Produtos
     Route::get('/produtos/{id}/fotos', [FotoProdutoController::class, 'index'])->name('admin.produtos.fotos.index');
     Route::post('/produtos/{id}/fotos', [FotoProdutoController::class, 'store'])->name('admin.produtos.fotos.store');
     Route::delete('/fotos/{id}', [FotoProdutoController::class, 'destroy'])->name('admin.produtos.fotos.destroy');
     Route::get('/produtos/{produto}/fotos', [AdminFotoProdutoController::class, 'index'])->name('admin.fotos.index');
 
-    // Categorias ✅
+    // Categorias
     Route::get('/categorias', [AdminCategoriaController::class, 'index'])->name('admin.categorias.index');
     Route::get('/categorias/novo', [AdminCategoriaController::class, 'create'])->name('admin.categorias.create');
     Route::post('/categorias', [AdminCategoriaController::class, 'store'])->name('admin.categorias.store');
     Route::get('/categorias/{id}/editar', [AdminCategoriaController::class, 'edit'])->name('admin.categorias.edit');
     Route::put('/categorias/{id}', [AdminCategoriaController::class, 'update'])->name('admin.categorias.update');
     Route::delete('/categorias/{id}', [AdminCategoriaController::class, 'destroy'])->name('admin.categorias.destroy');
+
+    // Configuração de APIs externas
+    Route::get('/configuracao-api/{nome_sistema}', [ConfiguracaoApiController::class, 'edit'])->name('configuracoes_api.edit');
+    Route::put('/configuracao-api/{nome_sistema}', [ConfiguracaoApiController::class, 'update'])->name('configuracoes_api.update');
+
+    // ✅ Rota do gráfico de pedidos por mês
+    Route::get('/grafico-pedidos', [AdminController::class, 'graficoPedidos']);
 });

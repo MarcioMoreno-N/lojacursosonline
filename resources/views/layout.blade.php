@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>@yield('title', 'Loja de Cursos Online')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- ✅ Chart.js CDN adicionado -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    
+
     <style>
         body {
             background-color: #1e1e2f;
@@ -118,5 +124,8 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+@yield('scripts')
+
 </body>
 </html>

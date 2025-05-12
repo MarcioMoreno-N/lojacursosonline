@@ -7,6 +7,8 @@
 
     @if(session('success'))
         <div class="alert alert-success text-center">{{ session('success') }}</div>
+    @elseif(session('error'))
+        <div class="alert alert-danger text-center">{{ session('error') }}</div>
     @endif
 
     @if(count($carrinho))
@@ -46,10 +48,10 @@
         </h4>
 
         <div class="text-center mt-4">
-            <form action="{{ route('carrinho.finalizar') }}" method="POST" class="d-inline">
+            <form action="{{ route('carrinho.finalizar') }}" method="POST" style="max-width: 600px; margin: 0 auto;">
                 @csrf
 
-                <div class="mb-3 text-start text-light" style="max-width: 600px; margin: 0 auto;">
+                <div class="mb-3 text-start text-light">
                     <label for="endereco_id" class="form-label">Selecione um endereço para entrega:</label>
                     <select name="endereco_id" id="endereco_id" class="form-select bg-dark text-light border-secondary" required>
                         <option value="" disabled selected>Escolha um endereço</option>
@@ -61,15 +63,16 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-outline-success me-2">Finalizar Compra</button>
+                <div class="d-flex justify-content-center gap-3">
+                    <button type="submit" class="btn btn-outline-success">✅ Finalizar Compra</button>
+                    <a href="{{ route('produtos.index') }}" class="btn btn-outline-light">📚 Continuar comprando</a>
+                </div>
             </form>
 
-            <a href="{{ route('produtos.index') }}" class="btn btn-outline-light me-2">📚 Continuar comprando</a>
-
-            <form action="{{ route('carrinho.esvaziar') }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja esvaziar o carrinho?')">
+            <form action="{{ route('carrinho.esvaziar') }}" method="POST" class="mt-3" onsubmit="return confirm('Tem certeza que deseja esvaziar o carrinho?')">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn btn-outline-danger">Esvaziar Carrinho</button>
+                <button type="submit" class="btn btn-outline-danger">🗑️ Esvaziar Carrinho</button>
             </form>
         </div>
     @else

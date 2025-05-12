@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use App\Models\Pedido;
 use App\Models\PedidoItem;
 use App\Models\Produto;
 use App\Models\Endereco;
+use App\Models\Cliente;
+use App\Models\ConfiguracaoApi;
 
 class CarrinhoController extends Controller
 {
@@ -18,7 +21,6 @@ class CarrinhoController extends Controller
 
         $clienteId = Session::get('cliente_id');
 
-        // Busca os endereços do cliente
         $enderecos = Endereco::with('cidade')
             ->where('cliente_id', $clienteId)
             ->get();
@@ -29,11 +31,8 @@ class CarrinhoController extends Controller
     public function remover($id)
     {
         $carrinho = Session::get('carrinho', []);
-
-        if (isset($carrinho[$id])) {
-            unset($carrinho[$id]);
-            Session::put('carrinho', $carrinho);
-        }
+        unset($carrinho[$id]);
+        Session::put('carrinho', $carrinho);
 
         return redirect()->route('carrinho.index')->with('success', 'Curso removido do carrinho!');
     }
@@ -41,7 +40,6 @@ class CarrinhoController extends Controller
     public function esvaziar()
     {
         Session::forget('carrinho');
-
         return redirect()->route('carrinho.index')->with('success', 'Carrinho esvaziado!');
     }
 
@@ -50,33 +48,59 @@ class CarrinhoController extends Controller
         $clienteId = Session::get('cliente_id');
         $carrinho = Session::get('carrinho', []);
 
-        // Verifica se o usuário está logado
         if (!$clienteId) {
             return redirect()->route('cliente.login')->with('error', 'Você precisa estar logado.');
         }
 
-        // Verifica se o carrinho está vazio
         if (empty($carrinho)) {
             return redirect()->route('carrinho.index')->with('error', 'Seu carrinho está vazio.');
         }
 
-        // Valida o endereço selecionado
         $request->validate([
             'endereco_id' => 'required|exists:enderecos,id'
         ]);
 
-        // Calcula o valor total do pedido
         $valorTotal = array_sum(array_column($carrinho, 'subtotal'));
 
-        // Cria o pedido
+        // 🔗 Integração com Caçapay
+        $cliente = Cliente::find($clienteId);
+        $cpf = $cliente->cpf;
+
+        $config = ConfiguracaoApi::where('nome_sistema', 'cacapay')->first();
+        if (!$config) {
+            return redirect()->route('carrinho.index')->with('error', 'API do Caçapay não configurada.');
+        }
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => $config->token
+            ])->post(rtrim($config->url_base, '/') . '/api/verificar-saldo', [
+                'cpf' => $cpf,
+                'valor' => $valorTotal
+            ]);
+
+            if ($response->failed()) {
+                return redirect()->route('carrinho.index')->with('error', 'Erro ao se comunicar com a API Caçapay.');
+            }
+
+            $resultado = $response->json();
+            if (!isset($resultado['aprovado']) || !$resultado['aprovado']) {
+                return redirect()->route('carrinho.index')->with('error', 'Pagamento recusado pelo Caçapay.');
+            }
+
+        } catch (\Exception $e) {
+            return redirect()->route('carrinho.index')->with('error', 'Erro na integração com Caçapay: ' . $e->getMessage());
+        }
+
+        // ✅ Cria o pedido
         $pedido = Pedido::create([
             'cliente_id' => $clienteId,
             'endereco_id' => $request->endereco_id,
             'valor_total' => $valorTotal,
             'status' => 'pendente',
+            'status_pagamento' => 'aprovado',
         ]);
 
-        // Cria os itens do pedido
         foreach ($carrinho as $item) {
             PedidoItem::create([
                 'pedido_id' => $pedido->id,
@@ -87,9 +111,8 @@ class CarrinhoController extends Controller
             ]);
         }
 
-        // Limpa o carrinho da sessão
         Session::forget('carrinho');
 
-        return redirect()->route('carrinho.index')->with('success', 'Pedido realizado com sucesso!');
+        return redirect()->route('pedidos.index')->with('success', 'Pedido realizado e pagamento aprovado!');
     }
 }
